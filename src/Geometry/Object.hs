@@ -5,10 +5,15 @@ type Colour = (Scalar, Scalar, Scalar)
 type ByteColour = (Int, Int, Int)
 type Radius = Scalar
 type Center = Vector
+type Ambient = Colour
+type Diffuse = Colour
+type Specular = Colour
+type SpecularPower = Scalar
 
 -- ambient diffuse surface power
-data Material = Material Colour Colour Colour Scalar
+data Material = Material Ambient Diffuse Specular SpecularPower
 
+-- Plane normal point
 data Surface = Sphere Radius Center Material | Plane (Scalar, Scalar, Scalar) (Scalar, Scalar, Scalar) Material
 
 -- Ray origin direction
