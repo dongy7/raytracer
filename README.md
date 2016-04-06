@@ -10,7 +10,12 @@ cabal run
 ```
 
 ## Performance
-Testing done on a 2.3GHz Core i7 system
+
+###Runtime Environment
+- OSX v10.10.5
+- GHCI v7.10.3
+- GLUT v2.7.0.3
+- 2.3GHz Core i7 
 
 |Antialias| Time|
 |---------|-----|
