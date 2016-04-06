@@ -1,7 +1,6 @@
 module Math.Shader where
 
-import Prelude hiding ((<*>), (<+>), (<->))
-
+import Prelude hiding ((<*>))
 import Math.SceneParams
 import Geometry.Object
 import Geometry.Vector
@@ -15,39 +14,27 @@ computeShading surf vec = addColour phong $ addColour lambertian ambiant
 
 -- compute the phong shading for a given point on surface
 phongShade :: Surface -> Vector -> Colour
-phongShade (Sphere rad center (Material amb dif surf pow)) vec = scaleColour surf k
+phongShade surf vec = scaleColour spec k
   where vVec = e <-> vec
         lVec = lightSource <-> vec
         normV = normalise vVec
         normL = normalise lVec
         h = computeBisector normV normL
-        normN = normalise $ computeSurfNorm (Sphere rad center (Material amb dif surf pow)) vec
+        normN = normalise $ computeSurfNorm surf vec
         dot = normN <*> h
-        k = intensity * ((max' (0, dot)) ** pow)
-phongShade (Plane norm point (Material amb dif surf pow)) vec = scaleColour surf k
-  where vVec = e <-> vec
-        lVec = lightSource <-> vec
-        normV = normalise vVec
-        normL = normalise lVec
-        h = computeBisector normV normL
-        normN = normalise $ computeSurfNorm (Plane norm point (Material amb dif surf pow)) vec
-        dot = normN <*> h
-        k = intensity * ((max' (0, dot)) ** pow)
+        pow = getSpecPower surf
+        spec = getSpecular surf
+        k = intensity * (max' (0, dot) ** pow)
 
 -- compute the diffuse shading for a given point on surface
 diffuseShade :: Surface -> Vector -> Colour
-diffuseShade (Sphere rad cen (Material am dif sur pow)) vec = scaleColour dif k
-  where normN = normalise $ computeSurfNorm (Sphere rad cen (Material am dif sur pow)) vec
+diffuseShade surf vec = scaleColour dif k
+  where normN = normalise $ computeSurfNorm surf vec
         normL = normalise lVec
         lVec = lightSource <-> vec
         dot = normL <*> normN
-        k = intensity * (max' (0, dot))
-diffuseShade (Plane norm point (Material am dif sur pow)) vec = scaleColour dif k
-  where normN = normalise $ computeSurfNorm (Plane norm point (Material am dif sur pow)) vec
-        normL = normalise l
-        l = lightSource <-> vec
-        dot = normL <*> normN
-        k = intensity * (max' (0, dot))
+        dif = getDiffuse surf
+        k = intensity * max' (0, dot)
 
 -- compute the ambient shading for a given point on surface
 ambientShade :: Surface -> Colour
@@ -60,9 +47,25 @@ computeSurfNorm (Sphere _ center _) vec = vec <-> center
 computeSurfNorm (Plane normal _ _) _ = normal
 
 computeSurfPoint :: Ray -> Scalar -> Vector
-computeSurfPoint (Ray origin direction) scalar = origin <+> (mult direction scalar)
+computeSurfPoint (Ray origin direction) scalar = origin <+> mult direction scalar
 
 max' :: (Ord a) => (a, a) -> a
 max' (x, y) = if x > y
                  then x
                  else y
+
+getSpecPower :: Surface -> Scalar
+getSpecPower (Sphere _ _ (Material _ _ _ x)) = x
+getSpecPower (Plane _ _ (Material _ _ _ x)) = x
+
+getAmbiant :: Surface -> Vector
+getAmbiant (Sphere _ _ (Material x _ _ _)) = x
+getAmbiant (Plane _ _ (Material x _ _ _)) = x
+
+getDiffuse :: Surface -> Vector
+getDiffuse (Sphere _ _ (Material _ x _ _)) = x
+getDiffuse (Plane _ _ (Material _ x _ _)) = x
+
+getSpecular :: Surface -> Vector
+getSpecular (Sphere _ _ (Material _ _ x _)) = x
+getSpecular (Plane _ _ (Material _ _ x _)) = x

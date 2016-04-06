@@ -15,6 +15,10 @@ type SpecularPower = Scalar
 -- ambient diffuse surface power
 data Material = Material Ambient Diffuse Specular SpecularPower
 
+-- data Sphere = Sphere Radius Center
+-- data Plane = Plane (Scalar, Scalar, Scalar) (Scalar, Scalar, Scalar)
+-- data Shape = Sphere | Plane
+
 -- Plane normal point
 data Surface = Sphere Radius Center Material | Plane (Scalar, Scalar, Scalar) (Scalar, Scalar, Scalar) Material
 
@@ -36,7 +40,7 @@ convertToInt :: Scalar -> Int
 convertToInt s =  fromIntegral (round s :: Int) :: Int
 
 convertToFloat :: Scalar -> GLfloat
-convertToFloat s = (realToFrac s) :: GLfloat
+convertToFloat s = realToFrac s :: GLfloat
 
 convertToFloatColor :: Colour -> Color3 GLfloat
 convertToFloatColor (x, y, z) = Color3 (convertToFloat x) (convertToFloat y) (convertToFloat z)

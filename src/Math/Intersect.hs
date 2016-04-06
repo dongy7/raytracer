@@ -1,7 +1,6 @@
 module Math.Intersect where
 
-import Prelude hiding ((<*>), (<+>), (<->))
-
+import Prelude hiding ((<*>))
 import Geometry.Object
 import Geometry.Vector
 
