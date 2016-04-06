@@ -63,7 +63,7 @@ minIntersection (r1, Just a, s1) (r2, Just b, s2) = if a < b
                                                              else (r2, Just b, s2)
 minIntersection (r1, Just a, s1) (_, Nothing, _) = (r1, Just a, s1)
 minIntersection (_, Nothing, _) (r2, Just b, s2) = (r2, Just b, s2)
-minIntersection (_, Nothing, _) (r2, Nothing, s2) = (r2, Just b, s2)
+minIntersection (_, Nothing, _) (r2, Nothing, s2) = (r2, Nothing, s2)
 
 
 isPos :: Intersection -> Bool

@@ -12,11 +12,20 @@ import Render.Raytracer
 data State = State { zoomFactor :: IORef GLfloat }
 type Image = PixelData (Color3 GLfloat)
 
+fstSphere :: Surface
+fstSphere = Sphere 1 (-4, 0, -7) (Material (0.2, 0, 0) (1, 0, 0) (0, 0, 0) 0)
+
+sndSphere :: Surface
+sndSphere = Sphere 2 (0, 0, -7) (Material (0, 0.2, 0) (0, 0.5, 0) (0.5, 0.5, 0.5) 32)
+
+thdSphere :: Surface
+thdSphere = Sphere 1 (4, 0, -7) (Material (0, 0, 0.2) (0, 0, 1) (0, 0, 0) 0)
+
+plane :: Surface
+plane = Plane (0, 1, 0) (0, -2, 0) (Material (0.2, 0.2, 0.2) (1, 1, 1) (0, 0, 0) 0)
+
 scene :: Scene
-scene = [Sphere 1 (-4, 0, -7) (Material (0.2, 0, 0) (1, 0, 0) (0, 0, 0) 0),
-         Sphere 2 (0, 0, -7) (Material (0, 0.2, 0) (0, 0.5, 0) (0.5, 0.5, 0.5) 32),
-         Sphere 1 (4, 0, -7) (Material (0, 0, 0.2) (0, 0, 1) (0, 0, 0) 0),
-         Plane (0, 1, 0) (0, -2, 0) (Material (0.2, 0.2, 0.2) (1, 1, 1) (0, 0, 0) 0)]
+scene = [fstSphere, sndSphere, thdSphere, plane]
 
 makeState :: IO State
 makeState = do
