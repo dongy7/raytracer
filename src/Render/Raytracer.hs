@@ -1,6 +1,5 @@
 module Render.Raytracer where
 
-import Graphics.UI.GLUT
 import Geometry.Object
 import Geometry.Vector
 import Math.SceneParams
@@ -26,10 +25,10 @@ computeRay i j = ray
 -- returns intersection color for a possible intersection
 getIntersectColor :: Maybe PosIntersection -> Scene -> Colour
 getIntersectColor m scene = case m of
-                              Nothing -> (0.0, 0.0, 0.0)
-                              Just (Ray e d, s, surf) -> if (isBlocked surf scene (Ray e d) s)
-                                                            then ambientShade surf
-                                                            else computeShading surf (computeSurfPoint (Ray e d) s)
+  Nothing -> (0.0, 0.0, 0.0)
+  Just (Ray origin direction, s, surf) -> if (isBlocked surf scene (Ray origin direction) s)
+                                             then ambientShade surf
+                                             else computeShading surf (computeSurfPoint (Ray origin direction) s)
 
 -- returns true if ray is blocked by an object in the scene
 isBlocked :: Surface -> Scene -> Ray -> Scalar -> Bool
@@ -41,8 +40,8 @@ isBlocked surf scene (Ray origin direction) scalar = rayBlocked (Ray fixedSurfPo
 
 
 rayBlocked :: Ray -> Scene -> Bool
-rayBlocked ray scene = isValid min
-  where min = rayIntersectScene ray scene
+rayBlocked ray scene = isValid minIntersect
+  where minIntersect = rayIntersectScene ray scene
 
 isValid :: Maybe PosIntersection -> Bool
 isValid Nothing = False
@@ -56,27 +55,27 @@ rayIntersectScene ray scene = getMinIntersect intersections
 -- returns the minimum intersection
 getMinIntersect :: [Intersection] -> Maybe PosIntersection
 getMinIntersect [] = Nothing
-getMinIntersect xs = toPosIntersection min
-  where min = foldl1 minIntersection xs
+getMinIntersect xs = toPosIntersection minIntersect
+  where minIntersect = foldl1 minIntersection xs
 
 -- returns min of two maybe values
 minIntersection :: Intersection -> Intersection -> Intersection
-minIntersection (r1, Just a, s1) (r2, Just b, s2) = if a < b
-                                                             then (r1, Just a, s1)
-                                                             else (r2, Just b, s2)
-minIntersection (r1, Just a, s1) (_, Nothing, _) = (r1, Just a, s1)
-minIntersection (_, Nothing, _) (r2, Just b, s2) = (r2, Just b, s2)
+minIntersection (r1, Just x, s1) (r2, Just y, s2) = if x < y
+                                                             then (r1, Just x, s1)
+                                                             else (r2, Just y, s2)
+minIntersection (r1, Just x, s1) (_, Nothing, _) = (r1, Just x, s1)
+minIntersection (_, Nothing, _) (r2, Just y, s2) = (r2, Just y, s2)
 minIntersection (_, Nothing, _) (r2, Nothing, s2) = (r2, Nothing, s2)
 
 
 isPos :: Intersection -> Bool
 isPos (_, Nothing, _) = False
-isPos (_, Just a, _) = a > 0
+isPos (_, Just x, _) = x > 0
 
 
 -- computes gamma corrected color
 gammaCorrect :: Colour -> Scalar -> Colour
-gammaCorrect (x, y, z) gamma = (x', y', z')
-  where x' = x ** (1/gamma)
-        y' = y ** (1/gamma)
-        z' = z ** (1/gamma)
+gammaCorrect (x, y, z) g = (x', y', z')
+  where x' = x ** (1/g)
+        y' = y ** (1/g)
+        z' = z ** (1/g)
