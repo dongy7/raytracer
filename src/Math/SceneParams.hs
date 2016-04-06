@@ -42,3 +42,6 @@ lightSource = (-4, 4, -3)
 
 epsilon :: Scalar
 epsilon = 0.0001
+
+gamma :: Scalar
+gamma = 2.2

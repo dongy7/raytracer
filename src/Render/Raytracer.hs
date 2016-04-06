@@ -5,6 +5,12 @@ import Geometry.Vector
 import Math.SceneParams
 import Math.Intersect
 import Math.Shader
+import Graphics.UI.GLUT
+
+computePixelColor :: Scene -> Scalar -> Scalar -> Color3 GLfloat
+computePixelColor scene i j = convertToFloatColor $ gammaCorrect color gamma
+  where color = getIntersectColor intersection scene
+        intersection = rayIntersectScene (computeRay i j) scene
 
 -- generates the viewing ray for a given pixel coord
 computeRay :: Scalar -> Scalar -> Ray

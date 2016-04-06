@@ -5,18 +5,18 @@ import Data.Bits ( (.&.) )
 import Data.IORef ( IORef, newIORef )
 import Foreign ( newArray )
 import System.Exit ( exitWith, ExitCode(ExitSuccess) )
-import Graphics.UI.GLUT
-import Geometry
-import Raytracer
+import Graphics.UI.GLUT hiding (Sphere, Plane)
+import Geometry.Object
+import Render.Raytracer
 
 data State = State { zoomFactor :: IORef GLfloat }
 type Image = PixelData (Color3 GLfloat)
 
 scene :: Scene
-scene = [Geometry.Sphere 1 (-4, 0, -7) (Material (0.2, 0, 0) (1, 0, 0) (0, 0, 0) 0),
-         Geometry.Sphere 2 (0, 0, -7) (Material (0, 0.2, 0) (0, 0.5, 0) (0.5, 0.5, 0.5) 32),
-         Geometry.Sphere 1 (4, 0, -7) (Material (0, 0, 0.2) (0, 0, 1) (0, 0, 0) 0),
-         Geometry.Plane (0, 1, 0) (0, -2, 0) (Material (0.2, 0.2, 0.2) (1, 1, 1) (0, 0, 0) 0)]
+scene = [Sphere 1 (-4, 0, -7) (Material (0.2, 0, 0) (1, 0, 0) (0, 0, 0) 0),
+         Sphere 2 (0, 0, -7) (Material (0, 0.2, 0) (0, 0.5, 0) (0.5, 0.5, 0.5) 32),
+         Sphere 1 (4, 0, -7) (Material (0, 0, 0.2) (0, 0, 1) (0, 0, 0) 0),
+         Plane (0, 1, 0) (0, -2, 0) (Material (0.2, 0.2, 0.2) (1, 1, 1) (0, 0, 0) 0)]
 
 makeState :: IO State
 makeState = do
@@ -43,3 +43,18 @@ reshape size@(Size w h) = do
    ortho2D 0 (fromIntegral w) 0 (fromIntegral h)
    matrixMode $= Modelview 0
    loadIdentity
+
+rayTrace :: Size -> GLsizei ->  IO Image
+rayTrace (Size w h) n =
+   fmap (PixelData RGB Float) $
+      newArray [ c |
+                 i <- [ 0 .. w - 1 ],
+                 j <- [ 0 .. h - 1 ],
+                 let c = computePixelColor scene (fromIntegral j) (fromIntegral i) ]
+
+createShadedImage :: IO Image
+createShadedImage = do
+                         clearColor $= Color4 0 0 0 0
+                         shadeModel $= Flat
+                         rowAlignment Unpack $= 1
+                         rayTrace sceneImageSize 0x8
