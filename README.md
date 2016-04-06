@@ -25,3 +25,6 @@ cabal run
 | 4x      | < 2s |
 | 16x     | < 5s |
 | 64x     | < 20s|
+
+## Result
+![Rendered Scene](/out/screenshot.png)
