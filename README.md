@@ -27,4 +27,4 @@ cabal run
 | 64x     | < 20s|
 
 ## Result
-![Rendered Scene](/out/screenshot.png)
+<img src="/out/screenshot.png" width="400px" height="400px" />
