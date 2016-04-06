@@ -59,6 +59,9 @@ computeSurfNorm :: Surface -> Vector -> Vector
 computeSurfNorm (Sphere _ center _) vec = vec <-> center
 computeSurfNorm (Plane normal _ _) _ = normal
 
+computeSurfPoint :: Ray -> Scalar -> Vector
+computeSurfPoint (Ray origin direction) scalar = origin <+> (mult direction scalar)
+
 max' :: (Ord a) => (a, a) -> a
 max' (x, y) = if x > y
                  then x

@@ -14,10 +14,13 @@ computeRay i j = ray
         uCoord = l + (r-l) * (i+0.5)/(fromIntegral width)
         vCoord = b + (t-b) * (j+0.5)/(fromIntegral height)
 
--- getIntersectColor :: Maybe PosIntersection -> Scene -> Colour
--- getIntersectColor m scene = case m of
---                                    Nothing -> (0.0, 0.0, 0.0)
---                                    Just (Ray e d, s, surf) -> 
+-- returns intersection color for a possible intersection
+getIntersectColor :: Maybe PosIntersection -> Scene -> Colour
+getIntersectColor m scene = case m of
+                              Nothing -> (0.0, 0.0, 0.0)
+                              Just (Ray e d, s, surf) -> if (isBlocked surf scene (Ray e d) s)
+                                                            then ambientShade surf
+                                                            else computeShading surf (computeSurfPoint (Ray e d) s)
 
 isBlocked :: Surface -> Scene -> Ray -> Scalar -> Bool
 isBlocked surf scene (Ray origin direction) scalar = rayBlocked (Ray fixedSurfPoint shadowDirection) scene
