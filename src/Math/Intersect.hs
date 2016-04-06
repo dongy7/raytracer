@@ -11,6 +11,9 @@ type RayScalar = Maybe Scalar
 -- ((ray, solutions))
 type Intersection = (Ray, RayScalar, Surface)
 
+-- positive intersection
+type PosIntersection = (Ray, Scalar, Surface)
+
 -- Solves ax^2 + bx + c = 0
 -- only returns positive solutions
 solveQuad :: Scalar -> Scalar -> Scalar -> Solution
