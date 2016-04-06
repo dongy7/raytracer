@@ -14,6 +14,12 @@ type Intersection = (Ray, RayScalar, Surface)
 -- positive intersection
 type PosIntersection = (Ray, Scalar, Surface)
 
+toPosIntersection :: Intersection -> Maybe PosIntersection
+toPosIntersection (_, Nothing, _) = Nothing
+toPosIntersection (r, Just x, s) = if x > 0.0
+                                      then Just (r, x, s)
+                                      else Nothing
+
 -- Solves ax^2 + bx + c = 0
 -- only returns positive solutions
 solveQuad :: Scalar -> Scalar -> Scalar -> Solution

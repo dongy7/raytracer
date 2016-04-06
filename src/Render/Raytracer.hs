@@ -13,18 +13,21 @@ computeRay i j = ray
         uCoord = l + (r-l) * (i+0.5)/(fromIntegral width)
         vCoord = b + (t-b) * (j+0.5)/(fromIntegral height)
 
+-- getIntersectColor :: Maybe PosIntersection -> Scene -> Colour
+-- getIntersectColor m scene = case m of
+--                                    Nothing -> (0.0, 0.0, 0.0)
+--                                    Just (Ray e d, s, surf) -> 
+
 
 -- returns the closest intersection
-rayIntersectScene :: Ray -> Scene -> Maybe Intersection
+rayIntersectScene :: Ray -> Scene -> Maybe PosIntersection
 rayIntersectScene ray scene = getMinIntersect intersections
   where intersections = [rayIntersect ray surf | surf <- scene]
 
 -- returns the minimum intersection
-getMinIntersect :: [Intersection] -> Maybe Intersection
+getMinIntersect :: [Intersection] -> Maybe PosIntersection
 getMinIntersect [] = Nothing
-getMinIntersect xs = if isPos min
-                        then Just min
-                        else Nothing
+getMinIntersect xs = toPosIntersection min
   where min = foldl1 minIntersection xs
 
 -- returns min of two maybe values
