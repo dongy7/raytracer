@@ -16,6 +16,8 @@ data Material = Material Ambient Diffuse Specular SpecularPower
 -- Plane normal point
 data Surface = Sphere Radius Center Material | Plane (Scalar, Scalar, Scalar) (Scalar, Scalar, Scalar) Material
 
+type Scene = [Surface]
+
 -- Ray origin direction
 data Ray = Ray Vector Vector
 
