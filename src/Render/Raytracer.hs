@@ -4,6 +4,7 @@ import Geometry.Object
 import Geometry.Vector
 import Math.SceneParams
 import Math.Intersect
+import Math.Shader
 
 -- generates the viewing ray for a given pixel coord
 computeRay :: Scalar -> Scalar -> Ray
@@ -18,6 +19,21 @@ computeRay i j = ray
 --                                    Nothing -> (0.0, 0.0, 0.0)
 --                                    Just (Ray e d, s, surf) -> 
 
+isBlocked :: Surface -> Scene -> Ray -> Scalar -> Bool
+isBlocked surf scene (Ray origin direction) scalar = rayBlocked (Ray fixedSurfPoint shadowDirection) scene
+  where surfPoint = origin <+> (mult direction scalar)
+        shadowDirection = lightSource <-> surfPoint
+        normVec = computeSurfNorm surf surfPoint
+        fixedSurfPoint = surfPoint <+> (mult normVec epsilon)
+
+
+rayBlocked :: Ray -> Scene -> Bool
+rayBlocked ray scene = isValid min
+  where min = rayIntersectScene ray scene
+
+isValid :: Maybe PosIntersection -> Bool
+isValid Nothing = False
+isValid (Just _) = True
 
 -- returns the closest intersection
 rayIntersectScene :: Ray -> Scene -> Maybe PosIntersection
