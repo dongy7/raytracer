@@ -1,14 +1,17 @@
 module Render.Raytracer where
 
+import Graphics.UI.GLUT
 import Geometry.Object
 import Geometry.Vector
 import Math.SceneParams
 import Math.Intersect
 import Math.Shader
-import Graphics.UI.GLUT
 
-computePixelColor :: Scene -> Scalar -> Scalar -> Color3 GLfloat
-computePixelColor scene i j = convertToFloatColor $ gammaCorrect color gamma
+computePixelPairColor :: Scene -> (Scalar, Scalar) -> Colour
+computePixelPairColor scene (i, j) = computePixelColor scene i j
+
+computePixelColor :: Scene -> Scalar -> Scalar -> Colour
+computePixelColor scene i j = gammaCorrect color gamma
   where color = getIntersectColor intersection scene
         intersection = rayIntersectScene (computeRay i j) scene
 

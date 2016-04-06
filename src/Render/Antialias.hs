@@ -1,9 +1,16 @@
-module Antialias where
+module Render.Antialias where
 
-import System.Random
 import Geometry.Vector
 import Geometry.Object
 import Math.SceneParams
+import Render.Raytracer
+import System.Random
+
+boxFilter :: Scene -> Scalar -> Scalar -> Colour
+boxFilter scene i j = avgColor
+  where randomPixels = genRandomPixels i j
+        shadings = map (computePixelPairColor scene) randomPixels
+        avgColor = getAverageColor shadings
 
 -- get average color from color list
 getAverageColor :: [Colour] -> Colour

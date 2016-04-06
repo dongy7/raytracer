@@ -8,6 +8,7 @@ import System.Exit ( exitWith, ExitCode(ExitSuccess) )
 import Graphics.UI.GLUT hiding (Sphere, Plane)
 import Geometry.Object
 import Render.Raytracer
+import Render.Antialias
 
 data State = State { zoomFactor :: IORef GLfloat }
 type Image = PixelData (Color3 GLfloat)
@@ -59,7 +60,7 @@ rayTrace (Size w h) n =
       newArray [ c |
                  i <- [ 0 .. w - 1 ],
                  j <- [ 0 .. h - 1 ],
-                 let c = computePixelColor scene (fromIntegral j) (fromIntegral i) ]
+                 let c = convertToFloatColor $ boxFilter scene (fromIntegral j) (fromIntegral i) ]
 
 createShadedImage :: IO Image
 createShadedImage = do
