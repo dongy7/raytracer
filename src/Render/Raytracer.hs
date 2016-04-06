@@ -22,6 +22,7 @@ getIntersectColor m scene = case m of
                                                             then ambientShade surf
                                                             else computeShading surf (computeSurfPoint (Ray e d) s)
 
+-- returns true if ray is blocked by an object in the scene
 isBlocked :: Surface -> Scene -> Ray -> Scalar -> Bool
 isBlocked surf scene (Ray origin direction) scalar = rayBlocked (Ray fixedSurfPoint shadowDirection) scene
   where surfPoint = origin <+> (mult direction scalar)
@@ -54,8 +55,9 @@ minIntersection :: Intersection -> Intersection -> Intersection
 minIntersection (r1, Just a, s1) (r2, Just b, s2) = if a < b
                                                              then (r1, Just a, s1)
                                                              else (r2, Just b, s2)
-minIntersection (r1, Just a, s1) (_, Nothing, s2) = (r1, Just a, s1)
+minIntersection (r1, Just a, s1) (_, Nothing, _) = (r1, Just a, s1)
 minIntersection (_, Nothing, _) (r2, Just b, s2) = (r2, Just b, s2)
+minIntersection (_, Nothing, _) (r2, Nothing, s2) = (r2, Just b, s2)
 
 
 isPos :: Intersection -> Bool

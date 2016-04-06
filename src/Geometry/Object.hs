@@ -1,6 +1,8 @@
 module Geometry.Object where
 import Geometry.Vector
+import Graphics.UI.GLUT hiding (Radius)
 
+type GLColor = Color3 GLfloat
 type Colour = (Scalar, Scalar, Scalar)
 type ByteColour = (Int, Int, Int)
 type Radius = Scalar
@@ -32,3 +34,9 @@ convertToByteColour (a, b, c) = (convertToInt a, convertToInt b, convertToInt c)
 
 convertToInt :: Scalar -> Int
 convertToInt s =  fromIntegral (round s :: Int) :: Int
+
+convertToFloat :: Scalar -> GLfloat
+convertToFloat s = (realToFrac s) :: GLfloat
+
+convertToFloatColor :: Colour -> Color3 GLfloat
+convertToFloatColor (x, y, z) = Color3 (convertToFloat x) (convertToFloat y) (convertToFloat z)
