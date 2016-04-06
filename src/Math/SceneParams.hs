@@ -45,3 +45,12 @@ epsilon = 0.0001
 
 gamma :: Scalar
 gamma = 2.2
+
+seedX :: Int
+seedX = 3
+
+seedY :: Int
+seedY = 4
+
+sampleSize :: Int
+sampleSize = 64
