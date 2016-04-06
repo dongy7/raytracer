@@ -3,6 +3,8 @@
 Basic ray tracer implementing the Phong shading model with box filtering.
 
 ## Running
+Make sure your GHCI version is at least `7.10.2`.
+
 ```
 git clone https://github.com/dongy7/raytracer.git
 cd raytracer
