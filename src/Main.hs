@@ -17,5 +17,6 @@ main = do
    displayCallback $= display sceneImage
    reshapeCallback $= Just reshape
    stop <- getCurrentTime
-   print $ diffUTCTime stop start
+   putStr "Rendered in: "
+   print $ (diffUTCTime stop start) 
    mainLoop

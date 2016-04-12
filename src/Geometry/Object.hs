@@ -5,23 +5,30 @@ import Graphics.UI.GLUT hiding (Radius)
 type GLColor = Color3 GLfloat
 type Colour = (Scalar, Scalar, Scalar)
 type ByteColour = (Int, Int, Int)
-type Radius = Scalar
-type Center = Vector
-type Ambient = Colour
-type Diffuse = Colour
-type Specular = Colour
-type SpecularPower = Scalar
-type Alpha = Scalar
 
 -- ambient diffuse surface power
-data Material = Material Ambient Diffuse Specular SpecularPower Scalar
+data Material = Material
+  {
+    ambient :: Colour,
+    diffuse :: Colour,
+    specular :: Colour,
+    specularPower :: Scalar,
+    alpha :: Scalar
+  }
 
--- data Sphere = Sphere Radius Center
--- data Plane = Plane (Scalar, Scalar, Scalar) (Scalar, Scalar, Scalar)
--- data Shape = Sphere | Plane
-
--- Plane normal point
-data Surface = Sphere Radius Center Material | Plane (Scalar, Scalar, Scalar) (Scalar, Scalar, Scalar) Material
+data Surface =
+  Sphere
+  {
+    radius :: Scalar,
+    center :: Vector,
+    material :: Material
+  } |
+  Plane
+  {
+    normal :: Vector,
+    point :: Vector,
+    material :: Material
+  }
 
 type Scene = [Surface]
 
