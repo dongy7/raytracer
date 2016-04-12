@@ -1,4 +1,14 @@
-module Math.Shader where
+module Math.Shader (
+  computeShading,
+  computeSurfNorm,
+  computeSurfPoint,
+  ambientShade,
+  getAmbiant,
+  getDiffuse,
+  getSpecular,
+  getSpecPower,
+  getAlpha
+) where
 
 import Prelude hiding ((<*>))
 import Math.SceneParams
@@ -38,8 +48,8 @@ diffuseShade surf vec = scaleColour dif k
 
 -- compute the ambient shading for a given point on surface
 ambientShade :: Surface -> Colour
-ambientShade  (Sphere _ _ (Material amb _ _ _ _)) = scaleColour amb intensity
-ambientShade  (Plane _ _ (Material amb _ _ _ _)) = scaleColour amb intensity
+ambientShade  (Sphere _ _ mat) = scaleColour (ambiant mat) intensity
+ambientShade  (Plane _ _ mat) = scaleColour (ambiant mat) intensity
 
 -- compute the normal for a point on a surface
 computeSurfNorm :: Surface -> Vector -> Vector

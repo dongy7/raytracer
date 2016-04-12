@@ -1,4 +1,11 @@
-module Math.Intersect where
+module Math.Intersect (
+  rayIntersect,
+  toPosIntersection,
+  Solution,
+  RayScalar,
+  Intersection,
+  PosIntersection
+) where
 
 import Prelude hiding ((<*>))
 import Geometry.Object
