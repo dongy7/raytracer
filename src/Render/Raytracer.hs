@@ -22,6 +22,28 @@ computeRay i j = ray
         uCoord = l + (r-l) * (i+0.5)/(fromIntegral width)
         vCoord = b + (t-b) * (j+0.5)/(fromIntegral height)
 
+getReflectedColor :: Int -> Maybe PosIntersection -> Scene -> Colour
+getReflectedColor = colorPoint
+
+
+colorPoint :: Int -> Maybe PosIntersection -> Scene -> Colour
+colorPoint (-1) _ _ = (0.0, 0.0, 0.0)
+colorPoint _ Nothing _  = (0.0, 0.0, 0.0)
+colorPoint depth (Just (Ray e d, s, surf)) scene = addColour reflectColor phongColor
+  where surfPoint = computeSurfPoint (Ray e d) s
+        surfNorm = normalise $ computeSurfNorm surf surfPoint
+        reflectDir = computeReflection d surfNorm
+        reflectRay = Ray surfPoint reflectDir
+        reflectIntersection = rayIntersectScene reflectRay scene
+        alpha = getAlpha surf
+        reflectColor = scaleColour (getReflectedColor (depth-1) reflectIntersection scene) alpha
+        phongColor = getShadeColor (Ray e d, s, surf) surfPoint alpha scene
+
+
+getShadeColor :: PosIntersection -> Vector -> Scalar -> Scene -> Colour
+getShadeColor (Ray e d, s, surf) surfPoint alpha scene = if (isBlocked surf scene (Ray e d) s)
+  then ambientShade surf
+  else scaleColour (computeShading surf (computeSurfPoint (Ray e d) s)) (1-alpha)
 
 -- returns intersection color for a possible intersection
 getIntersectColor :: Maybe PosIntersection -> Scene -> Colour

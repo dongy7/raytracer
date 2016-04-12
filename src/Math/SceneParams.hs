@@ -53,4 +53,7 @@ seedY :: Int
 seedY = 4
 
 sampleSize :: Int
-sampleSize = 64
+sampleSize = 1
+
+depth :: Int
+depth = 2
