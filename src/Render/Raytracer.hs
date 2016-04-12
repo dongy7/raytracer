@@ -6,12 +6,13 @@ import Math.SceneParams
 import Math.Intersect
 import Math.Shader
 
+
 computePixelPairColor :: Scene -> (Scalar, Scalar) -> Colour
 computePixelPairColor scene (i, j) = computePixelColor scene i j
 
 computePixelColor :: Scene -> Scalar -> Scalar -> Colour
 computePixelColor scene i j = gammaCorrect color gamma
-  where color = getIntersectColor intersection scene
+  where color = colorPoint depth intersection scene
         intersection = rayIntersectScene (computeRay i j) scene
 
 -- generates the viewing ray for a given pixel coord
@@ -25,19 +26,20 @@ computeRay i j = ray
 getReflectedColor :: Int -> Maybe PosIntersection -> Scene -> Colour
 getReflectedColor = colorPoint
 
-
+-- gets intersection color with reflection
 colorPoint :: Int -> Maybe PosIntersection -> Scene -> Colour
 colorPoint (-1) _ _ = (0.0, 0.0, 0.0)
 colorPoint _ Nothing _  = (0.0, 0.0, 0.0)
 colorPoint depth (Just (Ray e d, s, surf)) scene = addColour reflectColor phongColor
   where surfPoint = computeSurfPoint (Ray e d) s
         surfNorm = normalise $ computeSurfNorm surf surfPoint
+        fixedSurfPoint = surfPoint <+> (mult surfNorm epsilon)
         reflectDir = computeReflection d surfNorm
-        reflectRay = Ray surfPoint reflectDir
+        reflectRay = Ray fixedSurfPoint reflectDir
         reflectIntersection = rayIntersectScene reflectRay scene
         alpha = getAlpha surf
         reflectColor = scaleColour (getReflectedColor (depth-1) reflectIntersection scene) alpha
-        phongColor = getShadeColor (Ray e d, s, surf) surfPoint alpha scene
+        phongColor = getShadeColor (Ray e d, s, surf) fixedSurfPoint alpha scene
 
 
 getShadeColor :: PosIntersection -> Vector -> Scalar -> Scene -> Colour

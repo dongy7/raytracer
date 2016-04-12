@@ -5,8 +5,6 @@ import Math.SceneParams
 import Geometry.Object
 import Geometry.Vector
 
-
-
 -- compute the overall shading for a point on surface
 computeShading :: Surface -> Vector -> Colour
 computeShading surf vec = addColour phong $ addColour lambertian ambiant
