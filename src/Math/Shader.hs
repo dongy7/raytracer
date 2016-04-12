@@ -55,22 +55,22 @@ max' (x, y) = if x > y
                  else y
 
 getSpecPower :: Surface -> Scalar
-getSpecPower (Sphere _ _ (Material _ _ _ x _)) = x
-getSpecPower (Plane _ _ (Material _ _ _ x _)) = x
+getSpecPower (Sphere _ _ material) = specularPower material
+getSpecPower (Plane _ _ material) = specularPower material
 
 getAmbiant :: Surface -> Vector
-getAmbiant (Sphere _ _ (Material x _ _ _ _)) = x
-getAmbiant (Plane _ _ (Material x _ _ _ _)) = x
+getAmbiant (Sphere _ _ material) = ambiant material
+getAmbiant (Plane _ _ material) = ambiant material
 
 getDiffuse :: Surface -> Vector
-getDiffuse (Sphere _ _ (Material _ x _ _ _)) = x
-getDiffuse (Plane _ _ (Material _ x _ _ _)) = x
+getDiffuse (Sphere _ _ material) = diffuse material
+getDiffuse (Plane _ _ material) = diffuse material
 
 getSpecular :: Surface -> Vector
-getSpecular (Sphere _ _ (Material _ _ x _ _)) = x
-getSpecular (Plane _ _ (Material _ _ x _ _)) = x
+getSpecular (Sphere _ _ material) = specular material
+getSpecular (Plane _ _ material) = specular material
 
 getAlpha :: Surface -> Scalar
-getAlpha (Sphere _ _ (Material _ _ _ _ x)) = x
-getAlpha (Plane _ _ (Material _ _ _ _ x)) = x
+getAlpha (Sphere _ _ material) = alpha material
+getAlpha (Plane _ _ material) = alpha material
 

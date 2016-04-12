@@ -9,7 +9,7 @@ type ByteColour = (Int, Int, Int)
 -- ambient diffuse surface power
 data Material = Material
   {
-    ambient :: Colour,
+    ambiant :: Colour,
     diffuse :: Colour,
     specular :: Colour,
     specularPower :: Scalar,
