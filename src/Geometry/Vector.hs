@@ -1,5 +1,7 @@
 module Geometry.Vector where
 
+import Prelude hiding ((<*>))
+
 type Scalar = Double
 type Vector = (Scalar, Scalar, Scalar)
 
@@ -30,3 +32,8 @@ computeBisector x y = bisector
   where sumVec = x <+> y
         sumMag = mag sumVec
         bisector = mult sumVec (1/sumMag)
+
+-- ray-direction surface-normal
+-- returns the reflection direction
+computeReflection :: Vector -> Vector -> Vector
+computeReflection direction normal = direction <-> mult normal (2* (direction <*> normal))

@@ -11,9 +11,10 @@ type Ambient = Colour
 type Diffuse = Colour
 type Specular = Colour
 type SpecularPower = Scalar
+type Alpha = Scalar
 
 -- ambient diffuse surface power
-data Material = Material Ambient Diffuse Specular SpecularPower
+data Material = Material Ambient Diffuse Specular SpecularPower Scalar
 
 -- data Sphere = Sphere Radius Center
 -- data Plane = Plane (Scalar, Scalar, Scalar) (Scalar, Scalar, Scalar)

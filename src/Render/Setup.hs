@@ -14,16 +14,16 @@ data State = State { zoomFactor :: IORef GLfloat }
 type Image = PixelData (Color3 GLfloat)
 
 fstSphere :: Surface
-fstSphere = Sphere 1 (-4, 0, -7) (Material (0.2, 0, 0) (1, 0, 0) (0, 0, 0) 0)
+fstSphere = Sphere 1 (-4, 0, -7) (Material (0.2, 0, 0) (1, 0, 0) (0, 0, 0) 0 0)
 
 sndSphere :: Surface
-sndSphere = Sphere 2 (0, 0, -7) (Material (0, 0.2, 0) (0, 0.5, 0) (0.5, 0.5, 0.5) 32)
+sndSphere = Sphere 2 (0, 0, -7) (Material (0, 0.2, 0) (0, 0.5, 0) (0.5, 0.5, 0.5) 32 0)
 
 thdSphere :: Surface
-thdSphere = Sphere 1 (4, 0, -7) (Material (0, 0, 0.2) (0, 0, 1) (0, 0, 0) 0)
+thdSphere = Sphere 1 (4, 0, -7) (Material (0, 0, 0.2) (0, 0, 1) (0, 0, 0) 0 0.8)
 
 plane :: Surface
-plane = Plane (0, 1, 0) (0, -2, 0) (Material (0.2, 0.2, 0.2) (1, 1, 1) (0, 0, 0) 0)
+plane = Plane (0, 1, 0) (0, -2, 0) (Material (0.2, 0.2, 0.2) (1, 1, 1) (0, 0, 0) 0 0.5)
 
 scene :: Scene
 scene = [fstSphere, sndSphere, thdSphere, plane]

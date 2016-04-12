@@ -5,6 +5,8 @@ import Math.SceneParams
 import Geometry.Object
 import Geometry.Vector
 
+
+
 -- compute the overall shading for a point on surface
 computeShading :: Surface -> Vector -> Colour
 computeShading surf vec = addColour phong $ addColour lambertian ambiant
@@ -38,8 +40,8 @@ diffuseShade surf vec = scaleColour dif k
 
 -- compute the ambient shading for a given point on surface
 ambientShade :: Surface -> Colour
-ambientShade  (Sphere _ _ (Material amb _ _ _)) = scaleColour amb intensity
-ambientShade  (Plane _ _ (Material amb _ _ _)) = scaleColour amb intensity
+ambientShade  (Sphere _ _ (Material amb _ _ _ _)) = scaleColour amb intensity
+ambientShade  (Plane _ _ (Material amb _ _ _ _)) = scaleColour amb intensity
 
 -- compute the normal for a point on a surface
 computeSurfNorm :: Surface -> Vector -> Vector
@@ -55,17 +57,22 @@ max' (x, y) = if x > y
                  else y
 
 getSpecPower :: Surface -> Scalar
-getSpecPower (Sphere _ _ (Material _ _ _ x)) = x
-getSpecPower (Plane _ _ (Material _ _ _ x)) = x
+getSpecPower (Sphere _ _ (Material _ _ _ x _)) = x
+getSpecPower (Plane _ _ (Material _ _ _ x _)) = x
 
 getAmbiant :: Surface -> Vector
-getAmbiant (Sphere _ _ (Material x _ _ _)) = x
-getAmbiant (Plane _ _ (Material x _ _ _)) = x
+getAmbiant (Sphere _ _ (Material x _ _ _ _)) = x
+getAmbiant (Plane _ _ (Material x _ _ _ _)) = x
 
 getDiffuse :: Surface -> Vector
-getDiffuse (Sphere _ _ (Material _ x _ _)) = x
-getDiffuse (Plane _ _ (Material _ x _ _)) = x
+getDiffuse (Sphere _ _ (Material _ x _ _ _)) = x
+getDiffuse (Plane _ _ (Material _ x _ _ _)) = x
 
 getSpecular :: Surface -> Vector
-getSpecular (Sphere _ _ (Material _ _ x _)) = x
-getSpecular (Plane _ _ (Material _ _ x _)) = x
+getSpecular (Sphere _ _ (Material _ _ x _ _)) = x
+getSpecular (Plane _ _ (Material _ _ x _ _)) = x
+
+getAlpha :: Surface -> Scalar
+getAlpha (Sphere _ _ (Material _ _ _ _ x)) = x
+getAlpha (Plane _ _ (Material _ _ _ _ x)) = x
+

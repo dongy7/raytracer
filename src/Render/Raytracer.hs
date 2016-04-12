@@ -22,6 +22,7 @@ computeRay i j = ray
         uCoord = l + (r-l) * (i+0.5)/(fromIntegral width)
         vCoord = b + (t-b) * (j+0.5)/(fromIntegral height)
 
+
 -- returns intersection color for a possible intersection
 getIntersectColor :: Maybe PosIntersection -> Scene -> Colour
 getIntersectColor m scene = case m of
