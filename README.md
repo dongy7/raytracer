@@ -1,6 +1,6 @@
 # raytracer
 
-Basic ray tracer implementing the Phong shading model with box filtering.
+Recursive ray tracer implementing the Phong shading model with box filtering.
 
 ## Running
 Make sure your GHCI version is at least `7.10.2`.
@@ -22,9 +22,9 @@ cabal run
 |Antialias| Time|
 |---------|-----|
 | 1x      | < 1s |
-| 4x      | < 2s |
-| 16x     | < 5s |
-| 64x     | < 20s|
+| 4x      | < 3s |
+| 16x     | < 10s |
+| 64x     | < 45s|
 
 ## Result
-<img src="/out/screenshot.png" width="400px" height="400px" />
+<img src="/out/reflection.png" width="400px" height="400px" />
