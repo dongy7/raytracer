@@ -1,4 +1,15 @@
-module Geometry.Vector where
+module Geometry.Vector (
+  Scalar,
+  Vector,
+  (<+>),
+  (<->),
+  (<*>),
+  mult,
+  vecSum,
+  normalise,
+  computeBisector,
+  computeReflection
+) where
 
 import Prelude hiding ((<*>))
 
