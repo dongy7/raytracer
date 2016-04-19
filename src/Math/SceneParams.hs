@@ -56,4 +56,4 @@ sampleSize :: Int
 sampleSize = 64
 
 depth :: Int
-depth = 4
+depth = 2
