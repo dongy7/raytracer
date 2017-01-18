@@ -21,7 +21,7 @@ executable raytracer-hs
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base,
-                       GLUT >=2.7 && <2.8,
+                       GLUT,
                        random,
                        time
   hs-source-dirs:      src
