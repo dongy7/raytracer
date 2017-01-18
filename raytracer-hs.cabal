@@ -20,7 +20,7 @@ executable raytracer-hs
   ghc-options:         -Wall
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >=4.8 && <4.9,
+  build-depends:       base,
                        GLUT >=2.7 && <2.8,
                        random,
                        time
