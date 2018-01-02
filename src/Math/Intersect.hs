@@ -7,6 +7,7 @@ module Math.Intersect (
   PosIntersection
 ) where
 
+import Control.Applicative hiding ((<*>))
 import Prelude hiding ((<*>))
 import Geometry.Object
 import Geometry.Vector
@@ -22,9 +23,9 @@ type PosIntersection = (Ray, Scalar, Surface)
 
 toPosIntersection :: Intersection -> Maybe PosIntersection
 toPosIntersection (_, Nothing, _) = Nothing
-toPosIntersection (r, Just x, s) = if x > 0.0
-                                      then Just (r, x, s)
-                                      else Nothing
+toPosIntersection (r, Just x, s)
+  | x > 0     = Just (r, x, s)
+  | otherwise = Nothing
 
 -- Solves ax^2 + bx + c = 0
 -- only returns positive solutions
@@ -43,19 +44,16 @@ solveQuad a b c = solns
 getMinSoln :: Solution -> RayScalar
 getMinSoln (Nothing, x) = x
 getMinSoln (x, Nothing) = x
-getMinSoln (Just a, Just b) = if a < b
-                                 then Just a
-                                 else Just b
+getMinSoln (a, b) = liftA2 min a b
 
 -- Returns the intersection of ray with given surface
 rayIntersect :: Ray -> Surface -> Intersection
-rayIntersect (Ray e d ) (Sphere radius center material) = (Ray e d, minSoln, Sphere radius center material)
+rayIntersect ray@(Ray e d ) sphere@(Sphere radius center material) = (ray, getMinSoln solns, sphere)
   where a = d <*> d
         b = 2 * (d <*> (e <-> center))
         c = (e <-> center) <*> (e <-> center) - radius*radius
         solns = solveQuad a b c
-        minSoln = getMinSoln solns
-rayIntersect (Ray e d) (Plane n p material) = (Ray e d, solns, Plane n p material)
+rayIntersect ray@(Ray e d) plane@(Plane n p material) = (ray, solns, plane)
   where numerator = (p <-> e) <*> n
         denominator = d <*> n
         quotient = numerator/denominator
@@ -64,6 +62,6 @@ rayIntersect (Ray e d) (Plane n p material) = (Ray e d, solns, Plane n p materia
 
 -- Preserve positive values
 getPosScalar :: Scalar -> Maybe Scalar
-getPosScalar s = if s > 0
-                    then Just s
-                    else Nothing
+getPosScalar c
+  | c > 0     = Just c
+  | otherwise = Nothing

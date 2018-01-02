@@ -6,7 +6,6 @@ import Math.SceneParams
 import Math.Intersect
 import Math.Shader
 
-
 computePixelPairColor :: Scene -> (Scalar, Scalar) -> Color
 computePixelPairColor scene (i, j) = computePixelColor scene i j
 
@@ -17,9 +16,8 @@ computePixelColor scene i j = gammaCorrect color gamma
 
 -- generates the viewing ray for a given pixel coord
 computeRay :: Scalar -> Scalar -> Ray
-computeRay i j = ray
-  where ray = Ray e (s <-> e)
-        s = e <+> (mult u uCoord) <+> (mult v vCoord) <-> (mult w d)
+computeRay i j = Ray e (s <-> e)
+  where s = e <+> (mult u uCoord) <+> (mult v vCoord) <-> (mult w d)
         uCoord = l + (r-l) * (i+0.5)/(fromIntegral width)
         vCoord = b + (t-b) * (j+0.5)/(fromIntegral height)
 
@@ -28,7 +26,7 @@ getReflectedColor = colorPoint
 
 -- gets intersection color with reflection
 colorPoint :: Int -> Maybe PosIntersection -> Scene -> Color
-colorPoint (-1) _ _ = (0.0, 0.0, 0.0)
+colorPoint (-1) _ _     = (0.0, 0.0, 0.0)
 colorPoint _ Nothing _  = (0.0, 0.0, 0.0)
 colorPoint depth (Just (Ray e d, s, surf)) scene = addColor reflectColor phongColor
   where surfPoint = computeSurfPoint (Ray e d) s
@@ -43,9 +41,9 @@ colorPoint depth (Just (Ray e d, s, surf)) scene = addColor reflectColor phongCo
 
 
 getShadeColor :: PosIntersection -> Vector -> Scalar -> Scene -> Color
-getShadeColor (Ray e d, s, surf) surfPoint alpha scene = if (isBlocked surf scene (Ray e d) s)
-  then ambientShade surf
-  else scaleColor (computeShading surf (computeSurfPoint (Ray e d) s)) (1-alpha)
+getShadeColor (ray, s, surf) surfPoint alpha scene
+  | isBlocked surf scene ray s = ambientShade surf
+  | otherwise                  = scaleColor (computeShading surf (computeSurfPoint ray s)) (1-alpha)
 
 -- returns intersection color for a possible intersection
 getIntersectColor :: Maybe PosIntersection -> Scene -> Color
@@ -63,40 +61,29 @@ isBlocked surf scene (Ray origin direction) scalar = rayBlocked (Ray fixedSurfPo
         normVec = computeSurfNorm surf surfPoint
         fixedSurfPoint = surfPoint <+> (mult normVec epsilon)
 
-
 rayBlocked :: Ray -> Scene -> Bool
-rayBlocked ray scene = isValid minIntersect
+rayBlocked ray scene = case minIntersect of
+                         Nothing -> False
+                         _       -> True
   where minIntersect = rayIntersectScene ray scene
-
-isValid :: Maybe PosIntersection -> Bool
-isValid Nothing = False
-isValid (Just _) = True
 
 -- returns the closest intersection
 rayIntersectScene :: Ray -> Scene -> Maybe PosIntersection
-rayIntersectScene ray scene = getMinIntersect intersections
-  where intersections = [rayIntersect ray surf | surf <- scene]
+rayIntersectScene ray scene = getMinIntersect [rayIntersect ray surf | surf <- scene]
 
 -- returns the minimum intersection
 getMinIntersect :: [Intersection] -> Maybe PosIntersection
 getMinIntersect [] = Nothing
-getMinIntersect xs = toPosIntersection minIntersect
-  where minIntersect = foldl1 minIntersection xs
+getMinIntersect xs = toPosIntersection $ foldl1 min' xs
 
 -- returns min of two maybe values
-minIntersection :: Intersection -> Intersection -> Intersection
-minIntersection (r1, Just x, s1) (r2, Just y, s2) = if x < y
-                                                             then (r1, Just x, s1)
-                                                             else (r2, Just y, s2)
-minIntersection (r1, Just x, s1) (_, Nothing, _) = (r1, Just x, s1)
-minIntersection (_, Nothing, _) (r2, Just y, s2) = (r2, Just y, s2)
-minIntersection (_, Nothing, _) (r2, Nothing, s2) = (r2, Nothing, s2)
-
-
-isPos :: Intersection -> Bool
-isPos (_, Nothing, _) = False
-isPos (_, Just x, _) = x > 0
-
+min' :: Intersection -> Intersection -> Intersection
+min' (_, Nothing, _) b@(_, Nothing, _) = b
+min' (_, Nothing, _) b@(_, _, _)       = b
+min' a@(_, _, _) (_, Nothing, _)       = a
+min' a@(_, Just x, _) b@(_, Just y, _)
+  | x < y     = a
+  | otherwise = b
 
 -- computes gamma corrected color
 gammaCorrect :: Color -> Scalar -> Color
