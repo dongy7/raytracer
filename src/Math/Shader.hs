@@ -16,15 +16,15 @@ import Geometry.Object
 import Geometry.Vector
 
 -- compute the overall shading for a point on surface
-computeShading :: Surface -> Vector -> Colour
-computeShading surf vec = addColour phong $ addColour lambertian ambiant
+computeShading :: Surface -> Vector -> Color
+computeShading surf vec = addColor phong $ addColor lambertian ambiant
   where lambertian = diffuseShade surf vec
         ambiant = ambientShade surf
         phong = phongShade surf vec
 
 -- compute the phong shading for a given point on surface
-phongShade :: Surface -> Vector -> Colour
-phongShade surf vec = scaleColour spec k
+phongShade :: Surface -> Vector -> Color
+phongShade surf vec = scaleColor spec k
   where vVec = e <-> vec
         lVec = lightSource <-> vec
         normV = normalise vVec
@@ -37,8 +37,8 @@ phongShade surf vec = scaleColour spec k
         k = intensity * (max' (0, dot) ** pow)
 
 -- compute the diffuse shading for a given point on surface
-diffuseShade :: Surface -> Vector -> Colour
-diffuseShade surf vec = scaleColour dif k
+diffuseShade :: Surface -> Vector -> Color
+diffuseShade surf vec = scaleColor dif k
   where normN = normalise $ computeSurfNorm surf vec
         normL = normalise lVec
         lVec = lightSource <-> vec
@@ -47,9 +47,9 @@ diffuseShade surf vec = scaleColour dif k
         k = intensity * max' (0, dot)
 
 -- compute the ambient shading for a given point on surface
-ambientShade :: Surface -> Colour
-ambientShade  (Sphere _ _ mat) = scaleColour (ambiant mat) intensity
-ambientShade  (Plane _ _ mat) = scaleColour (ambiant mat) intensity
+ambientShade :: Surface -> Color
+ambientShade  (Sphere _ _ mat) = scaleColor (ambiant mat) intensity
+ambientShade  (Plane _ _ mat) = scaleColor (ambiant mat) intensity
 
 -- compute the normal for a point on a surface
 computeSurfNorm :: Surface -> Vector -> Vector

@@ -1,17 +1,17 @@
 module Geometry.Object where
 import Geometry.Vector
-import Graphics.UI.GLUT hiding (Radius)
+import Graphics.UI.GLUT hiding (Radius, Color)
 
 type GLColor = Color3 GLfloat
-type Colour = (Scalar, Scalar, Scalar)
-type ByteColour = (Int, Int, Int)
+type Color = (Scalar, Scalar, Scalar)
+type ByteColor = (Int, Int, Int)
 
 -- ambient diffuse surface power
 data Material = Material
   {
-    ambiant :: Colour,
-    diffuse :: Colour,
-    specular :: Colour,
+    ambiant :: Color,
+    diffuse :: Color,
+    specular :: Color,
     specularPower :: Scalar,
     alpha :: Scalar
   }
@@ -35,14 +35,14 @@ type Scene = [Surface]
 -- Ray origin direction
 data Ray = Ray Vector Vector
 
-scaleColour :: Colour -> Scalar -> Colour
-scaleColour (x, y, z) k = (x*k, y*k, z*k)
+scaleColor :: Color -> Scalar -> Color
+scaleColor (x, y, z) k = (x*k, y*k, z*k)
 
-addColour :: Colour -> Colour -> Colour
-addColour (a, b, c) (x, y, z) = (a+x, b+y, c+z)
+addColor :: Color -> Color -> Color
+addColor (a, b, c) (x, y, z) = (a+x, b+y, c+z)
 
-convertToByteColour :: Colour -> ByteColour
-convertToByteColour (a, b, c) = (convertToInt a, convertToInt b, convertToInt c)
+convertToByteColor :: Color -> ByteColor
+convertToByteColor (a, b, c) = (convertToInt a, convertToInt b, convertToInt c)
 
 convertToInt :: Scalar -> Int
 convertToInt s =  fromIntegral (round s :: Int) :: Int
@@ -50,5 +50,5 @@ convertToInt s =  fromIntegral (round s :: Int) :: Int
 convertToFloat :: Scalar -> GLfloat
 convertToFloat s = realToFrac s :: GLfloat
 
-convertToFloatColor :: Colour -> Color3 GLfloat
+convertToFloatColor :: Color -> Color3 GLfloat
 convertToFloatColor (x, y, z) = Color3 (convertToFloat x) (convertToFloat y) (convertToFloat z)

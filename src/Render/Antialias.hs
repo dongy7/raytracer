@@ -6,19 +6,19 @@ import Math.SceneParams
 import Render.Raytracer
 import System.Random
 
-boxFilter :: Scene -> Scalar -> Scalar -> Colour
+boxFilter :: Scene -> Scalar -> Scalar -> Color
 boxFilter scene i j = avgColor
   where randomPixels = genRandomPixels i j
         shadings = map (computePixelPairColor scene) randomPixels
         avgColor = getAverageColor shadings
 
 -- get average color from color list
-getAverageColor :: [Colour] -> Colour
+getAverageColor :: [Color] -> Color
 getAverageColor colors = avg
-  where colorSum = foldl addColour (0, 0, 0) colors
+  where colorSum = foldl addColor (0, 0, 0) colors
         len = fromIntegral $ length colors
         reciprocal = 1/len
-        avg = scaleColour colorSum reciprocal
+        avg = scaleColor colorSum reciprocal
 
 
 -- generates random sample of pixels within the boundaries of a given pixel

@@ -7,10 +7,10 @@ import Math.Intersect
 import Math.Shader
 
 
-computePixelPairColor :: Scene -> (Scalar, Scalar) -> Colour
+computePixelPairColor :: Scene -> (Scalar, Scalar) -> Color
 computePixelPairColor scene (i, j) = computePixelColor scene i j
 
-computePixelColor :: Scene -> Scalar -> Scalar -> Colour
+computePixelColor :: Scene -> Scalar -> Scalar -> Color
 computePixelColor scene i j = gammaCorrect color gamma
   where color = colorPoint depth intersection scene
         intersection = rayIntersectScene (computeRay i j) scene
@@ -23,14 +23,14 @@ computeRay i j = ray
         uCoord = l + (r-l) * (i+0.5)/(fromIntegral width)
         vCoord = b + (t-b) * (j+0.5)/(fromIntegral height)
 
-getReflectedColor :: Int -> Maybe PosIntersection -> Scene -> Colour
+getReflectedColor :: Int -> Maybe PosIntersection -> Scene -> Color
 getReflectedColor = colorPoint
 
 -- gets intersection color with reflection
-colorPoint :: Int -> Maybe PosIntersection -> Scene -> Colour
+colorPoint :: Int -> Maybe PosIntersection -> Scene -> Color
 colorPoint (-1) _ _ = (0.0, 0.0, 0.0)
 colorPoint _ Nothing _  = (0.0, 0.0, 0.0)
-colorPoint depth (Just (Ray e d, s, surf)) scene = addColour reflectColor phongColor
+colorPoint depth (Just (Ray e d, s, surf)) scene = addColor reflectColor phongColor
   where surfPoint = computeSurfPoint (Ray e d) s
         surfNorm = normalise $ computeSurfNorm surf surfPoint
         fixedSurfPoint = surfPoint <+> (mult surfNorm epsilon)
@@ -38,17 +38,17 @@ colorPoint depth (Just (Ray e d, s, surf)) scene = addColour reflectColor phongC
         reflectRay = Ray fixedSurfPoint reflectDir
         reflectIntersection = rayIntersectScene reflectRay scene
         alpha = getAlpha surf
-        reflectColor = scaleColour (getReflectedColor (depth-1) reflectIntersection scene) alpha
+        reflectColor = scaleColor (getReflectedColor (depth-1) reflectIntersection scene) alpha
         phongColor = getShadeColor (Ray e d, s, surf) fixedSurfPoint alpha scene
 
 
-getShadeColor :: PosIntersection -> Vector -> Scalar -> Scene -> Colour
+getShadeColor :: PosIntersection -> Vector -> Scalar -> Scene -> Color
 getShadeColor (Ray e d, s, surf) surfPoint alpha scene = if (isBlocked surf scene (Ray e d) s)
   then ambientShade surf
-  else scaleColour (computeShading surf (computeSurfPoint (Ray e d) s)) (1-alpha)
+  else scaleColor (computeShading surf (computeSurfPoint (Ray e d) s)) (1-alpha)
 
 -- returns intersection color for a possible intersection
-getIntersectColor :: Maybe PosIntersection -> Scene -> Colour
+getIntersectColor :: Maybe PosIntersection -> Scene -> Color
 getIntersectColor m scene = case m of
   Nothing -> (0.0, 0.0, 0.0)
   Just (Ray origin direction, s, surf) -> if (isBlocked surf scene (Ray origin direction) s)
@@ -99,7 +99,7 @@ isPos (_, Just x, _) = x > 0
 
 
 -- computes gamma corrected color
-gammaCorrect :: Colour -> Scalar -> Colour
+gammaCorrect :: Color -> Scalar -> Color
 gammaCorrect (x, y, z) g = (x', y', z')
   where x' = x ** (1/g)
         y' = y ** (1/g)

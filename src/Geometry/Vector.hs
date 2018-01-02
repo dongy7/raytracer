@@ -39,10 +39,9 @@ normalise (x, y, z) = (x/m, y/m, z/m)
   where m = mag (x, y, z)
 
 computeBisector :: Vector -> Vector -> Vector
-computeBisector x y = bisector
+computeBisector x y = mult sumVec (1/sumMag)
   where sumVec = x <+> y
         sumMag = mag sumVec
-        bisector = mult sumVec (1/sumMag)
 
 -- ray-direction surface-normal
 -- returns the reflection direction
